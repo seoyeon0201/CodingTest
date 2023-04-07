@@ -1,4 +1,5 @@
 #21608 상어 초등학교
+#입력예제 모두 성공하고도, favorite과 empty에 실행시 max가 0이라 모든 (i,j)가 포함되는 경우도 예외처리해야함
 
 n = int(input())
 
@@ -34,6 +35,13 @@ def favorite(list, dp):
             elif max_lst[i][j] == max:
                 favorite_lst.append([i, j])
 
+    if len(favorite_lst) == n*n:
+        favorite_lst = []
+        for i in range(n):
+            for j in range(n):
+                if dp[i][j] == 0:
+                    favorite_lst.append([i, j])
+
     return favorite_lst
 
 def empty(list, favorite_lst):
@@ -59,6 +67,10 @@ def empty(list, favorite_lst):
             elif max_lst[i][j] == max:
                 empty_lst.append([i, j])
 
+    if len(empty_lst) == n*n:
+        empty_lst = []
+        empty_lst = favorite_lst
+
     return empty_lst
 
 def low(empty_lst):
@@ -78,11 +90,11 @@ def low(empty_lst):
 #자리 정하기
 for k in range(n*n):
     favorite_lst = favorite(table[k],dp)
-    if len(favorite_lst) == 1:
+    if len(favorite_lst) == 1 and dp[favorite_lst[0][0]][favorite_lst[0][1]] == 0:
         dp[favorite_lst[0][0]][favorite_lst[0][1]] = table[k][0]
     else:
         empty_lst = empty(table[k], favorite_lst)
-        if len(empty_lst) == 1:
+        if len(empty_lst) == 1 and dp[favorite_lst[0][0]][favorite_lst[0][1]] == 0:
             dp[empty_lst[0][0]][empty_lst[0][1]] = table[k][0]
         else:
             result = low(empty_lst)
